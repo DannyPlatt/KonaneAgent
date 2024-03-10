@@ -1,17 +1,34 @@
-run:
-	g++ KonaneBoard.cpp -Wall -o KonaneBoard.o -c
-	g++ main.cpp -Wall -o main.o -c
-	g++ MiniMaxPlayer.cpp -Wall -o MiniMaxPlayer.o -c
-	g++ MiniMaxPlayer2.cpp -Wall -o MiniMaxPlayer2.o -c
-	g++ -o prog main.o KonaneBoard.o MiniMaxPlayer.o MiniMaxPlayer2.o 
-	./prog
-	rm *.o
+# Author: ChatGPT 3.5
+# Last edited: 10/03/24 (DD/MM/YY)
 
-test:
-	g++ KonaneBoard.cpp -Wall -o KonaneBoard.o -c
-	g++ testKonaneBoard.cpp -Wall -o testKonaneBoard.o -c
-	g++ -o prog testKonaneBoard.o KonaneBoard.o
+# Define compiler and flags
+CXX := g++
+CXXFLAGS := -Wall
+
+# Define source files
+SRCS := KonaneBoard.cpp main.cpp MiniMaxPlayer.cpp MiniMaxPlayer2.cpp
+
+# Define object files
+OBJS := $(SRCS:.cpp=.o)
+
+# Main target
+prog: $(OBJS)
+	$(CXX) $(OBJS) -o $@
+
+# Rule to compile .cpp files to .o files
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Target to run the program
+run: prog
 	./prog
-	rm *.o
+
+# Target to run tests
+test: testKonaneBoard.cpp KonaneBoard.o
+	$(CXX) $(CXXFLAGS) $^ -o $@
+	./$@
+
+# Target to clean up object files and executables
 clean:
-	rm *.o
+	rm -f $(OBJS) prog test
+
